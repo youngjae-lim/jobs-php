@@ -57,3 +57,16 @@ function inspect($var)
     var_dump($var);
     echo '</pre>';
 }
+
+/**
+ * Inspect a variable and die
+ *
+ * @param  mixed  $var
+ * @return string
+ */
+function inspectAndDie($var)
+{
+    echo '<pre>';
+    exit(var_dump($var));
+    echo '</pre>';
+}
