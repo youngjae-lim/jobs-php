@@ -1,10 +1,7 @@
-<?php require basePath('views/partials/head.php'); ?>
-<?php require basePath('views/partials/navbar.php'); ?>
-<?php require basePath('views/partials/showcase-search.php'); ?>
-<?php require basePath('views/partials/top-banner.php'); ?>
-
-    
-
+<?php loadPartial('head'); ?>
+<?php loadPartial('navbar'); ?>
+<?php loadPartial('showcase-search'); ?>
+<?php loadPartial('top-banner'); ?>
 
     <!-- Job Listings -->
     <section>
@@ -161,11 +158,12 @@
             </div>
           </div>
 
+          <!-- Job Listing 6: Data Scientist -->
           <div class="rounded-lg shadow-md bg-white">
             <div class="p-4">
               <h2 class="text-xl font-semibold">Data Scientist</h2>
               <p class="text-gray-700 text-lg mt-2">
-                We're looking for a Data Scientist to analyze complex data and
+                We\'re looking for a Data Scientist to analyze complex data and
                 generate insights.
               </p>
               <ul class="my-4 bg-gray-100 p-4 rounded">
@@ -196,6 +194,6 @@
         </a>
       </section>
 
-<?php require basePath('views/partials/bottom-banner.php'); ?>
-<?php require basePath('views/partials/footer.php'); ?>
+<?php loadPartial('bottom-banner'); ?>
+<?php loadPartial('footer'); ?>
 
