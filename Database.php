@@ -23,7 +23,6 @@ class Database
         } catch (PDOException $e) {
             throw new Exception("Database connection failed: {$e->getMessage()}");
         }
-
     }
 
     /**
