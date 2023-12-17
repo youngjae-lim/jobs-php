@@ -5,6 +5,8 @@ $db = new Database($config);
 
 $listings = $db->query('SELECT * FROM listings LIMIT 6')->fetchAll();
 
-inspect($listings);
+$data = [
+    'listings' => $listings,
+];
 
-loadView('home');
+loadView('home', $data);
