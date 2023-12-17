@@ -15,11 +15,15 @@ function basePath($path = '')
  * Load a view
  *
  * @param  string  $name
+ * @param  array  $data
  * @return void
  */
-function loadView($name)
+function loadView($name, $data = [])
 {
     $viewPath = basePath("views/{$name}.view.php");
+
+    // Extract data from array so we can use it as variables in the view
+    extract($data);
 
     if (file_exists($viewPath)) {
         require $viewPath;
@@ -69,4 +73,15 @@ function inspectAndDie($var)
     echo '<pre>';
     exit(var_dump($var));
     echo '</pre>';
+}
+
+/**
+ * Format number as currency
+ *
+ * @param  int  $number
+ * @return string
+ */
+function formatCurrency($number)
+{
+    return '$'.number_format(floatval($number));
 }
