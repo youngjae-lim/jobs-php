@@ -36,7 +36,13 @@ class Database
     {
         try {
             $stmt = $this->conn->prepare($query);
-            $stmt->execute($params);
+
+            // Bind parameters
+            foreach ($params as $key => $value) {
+                $stmt->bindValue(":$key", $value);
+            }
+
+            $stmt->execute();
 
             return $stmt;
         } catch (PDOException $e) {
