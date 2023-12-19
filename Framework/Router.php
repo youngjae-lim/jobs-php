@@ -105,9 +105,7 @@ class Router
         foreach ($this->routes as $route) {
             if ($route['uri'] === $uri && $route['method'] === $method) {
                 $controller = 'App\\Controllers\\' . $route['controller'];
-                inspect($controller);
                 $controllerMethod = $route['controllerMethod'];
-                inspect($controllerMethod);
 
                 // Instantiate the controller and call the method.
                 $controllerInstance = new $controller();
