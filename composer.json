@@ -1,0 +1,16 @@
+{
+    "name": "youngjae-lim/jobs-php",
+    "description": "Job listing application",
+    "authors": [
+        {
+            "name": "Youngjae Lim",
+            "email": "limyoungjae@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "App/"
+        }
+    }
+}
