@@ -8,7 +8,7 @@
  */
 function basePath($path = '')
 {
-    return __DIR__.'/'.$path;
+    return __DIR__ . '/' . $path;
 }
 
 /**
@@ -20,7 +20,7 @@ function basePath($path = '')
  */
 function loadView($name, $data = [])
 {
-    $viewPath = basePath("views/{$name}.view.php");
+    $viewPath = basePath("App/views/{$name}.view.php");
 
     // Extract data from array so we can use it as variables in the view
     extract($data);
@@ -40,7 +40,7 @@ function loadView($name, $data = [])
  */
 function loadPartial($name)
 {
-    $partialPath = basePath("views/partials/{$name}.php");
+    $partialPath = basePath("App/views/partials/{$name}.php");
 
     if (file_exists($partialPath)) {
         require $partialPath;
@@ -83,5 +83,5 @@ function inspectAndDie($var)
  */
 function formatCurrency($number)
 {
-    return '$'.number_format(floatval($number));
+    return '$' . number_format(floatval($number));
 }
