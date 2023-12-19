@@ -2,6 +2,8 @@
 
 namespace Framework;
 
+use Exception;
+
 class Router
 {
     protected $routes = [];
@@ -11,15 +13,22 @@ class Router
      *
      * @param  string  $method
      * @param  string  $uri
-     * @param  string  $controller
+     * @param  string  $action
      * @return void
      */
-    public function registerRoute($method, $uri, $controller)
+    public function registerRoute($method, $uri, $action)
     {
+        if (strpos($action, '@') === false) {
+            throw new Exception('Invalid route action.');
+        }
+
+        list($controller, $controllerMethod) = explode('@', $action);
+
         $this->routes[] = [
             'method' => $method,
             'uri' => $uri,
             'controller' => $controller,
+            'controllerMethod' => $controllerMethod
         ];
     }
 
@@ -30,9 +39,9 @@ class Router
      * @return Router
      * @return void
      */
-    public function get($uri, $controller)
+    public function get($uri, $action)
     {
-        $this->registerRoute('GET', $uri, $controller);
+        $this->registerRoute('GET', $uri, $action);
     }
 
     /**
@@ -42,9 +51,9 @@ class Router
      * @return Router
      * @return void
      */
-    public function post($uri, $controller)
+    public function post($uri, $action)
     {
-        $this->registerRoute('POST', $uri, $controller);
+        $this->registerRoute('POST', $uri, $action);
     }
 
     /**
@@ -54,9 +63,9 @@ class Router
      * @return Router
      * @return void
      */
-    public function put($uri, $controller)
+    public function put($uri, $action)
     {
-        $this->registerRoute('PUT', $uri, $controller);
+        $this->registerRoute('PUT', $uri, $action);
     }
 
     /**
@@ -66,9 +75,9 @@ class Router
      * @return Router
      * @return void
      */
-    public function delete($uri, $controller)
+    public function delete($uri, $action)
     {
-        $this->registerRoute('DELETE', $uri, $controller);
+        $this->registerRoute('DELETE', $uri, $action);
     }
 
     /**
@@ -95,7 +104,14 @@ class Router
     {
         foreach ($this->routes as $route) {
             if ($route['uri'] === $uri && $route['method'] === $method) {
-                require basePath("App/{$route['controller']}");
+                $controller = 'App\\Controllers\\' . $route['controller'];
+                inspect($controller);
+                $controllerMethod = $route['controllerMethod'];
+                inspect($controllerMethod);
+
+                // Instantiate the controller and call the method.
+                $controllerInstance = new $controller();
+                $controllerInstance->$controllerMethod();
 
                 return;
             }
