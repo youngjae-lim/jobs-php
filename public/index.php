@@ -3,6 +3,8 @@
 require '../helpers.php';
 require __DIR__ . '/../vendor/autoload.php';
 
+use Framework\Router;
+
 // Autoload classes
 // spl_autoload_register(function ($class) {
 //     $path = basePath("Framework/{$class}.php");
