@@ -2,6 +2,7 @@
 
 namespace Framework;
 
+use App\Controllers\ErrorController;
 use Exception;
 
 class Router
@@ -81,19 +82,6 @@ class Router
     }
 
     /**
-     * Load error page based on status code.
-     *
-     * @param  int  $httpStatusCode
-     * @return void
-     */
-    public function error($httpStatusCode = 404)
-    {
-        http_response_code($httpStatusCode);
-        loadView("error/{$httpStatusCode}");
-        exit;
-    }
-
-    /**
      * Route the request to the appropriate controller method.
      *
      * @param  string  $uri
@@ -115,6 +103,6 @@ class Router
             }
         }
 
-        $this->error();
+        ErrorController::notFound();
     }
 }
