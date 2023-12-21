@@ -127,17 +127,6 @@ class Router
                     return;
                 }
             }
-
-            // if ($route['uri'] === $uri && $route['method'] === $method) {
-            //     $controller = 'App\\Controllers\\' . $route['controller'];
-            //     $controllerMethod = $route['controllerMethod'];
-            //
-            //     // Instantiate the controller and call the method.
-            //     $controllerInstance = new $controller();
-            //     $controllerInstance->$controllerMethod();
-            //
-            //     return;
-            // }
         }
 
         ErrorController::notFound();
