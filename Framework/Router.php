@@ -88,19 +88,56 @@ class Router
      * @param  string  $method
      * @return void
      */
-    public function route($uri, $method)
+    public function route($uri)
     {
+        $requestMethod = $_SERVER['REQUEST_METHOD'];
+
         foreach ($this->routes as $route) {
-            if ($route['uri'] === $uri && $route['method'] === $method) {
-                $controller = 'App\\Controllers\\' . $route['controller'];
-                $controllerMethod = $route['controllerMethod'];
+            // Split the route URI into parts
+            $uriSegments = explode('/', trim($uri, '/'));
+            $routeSegments = explode('/', trim($route['uri'], '/'));
 
-                // Instantiate the controller and call the method.
-                $controllerInstance = new $controller();
-                $controllerInstance->$controllerMethod();
+            // Check if the number of segments matches and if the request method matches the route method
+            if (count($uriSegments) === count($routeSegments) && $requestMethod === $route['method']) {
+                $params = [];
 
-                return;
+                $match = true;
+
+                // Loop through the route uriSegments
+                for ($i = 0; $i < count($uriSegments); $i++) {
+                    // If the segments don't match and the current route segment is not a parameter, stop matching
+                    // In other words, if either the segments match or the current route segment is a parameter, continue matching
+                    if ($uriSegments[$i] !== $routeSegments[$i] && !preg_match('/\{(.+?)\}/', $routeSegments[$i])) {
+                        $match = false;
+                        break;
+                    }
+
+                    // If the current route segment is a parameter, add it to the params array
+                    if (preg_match('/\{(.+?)\}/', $routeSegments[$i], $matches)) {
+                        $params[$matches[1]] = $uriSegments[$i];
+                    }
+                }
+
+                if ($match) {
+                    $controller = 'App\\Controllers\\' . $route['controller'];
+                    $controllerMethod = $route['controllerMethod'];
+                    // Instantiate the controller and call the method.
+                    $controllerInstance = new $controller();
+                    $controllerInstance->$controllerMethod($params);
+                    return;
+                }
             }
+
+            // if ($route['uri'] === $uri && $route['method'] === $method) {
+            //     $controller = 'App\\Controllers\\' . $route['controller'];
+            //     $controllerMethod = $route['controllerMethod'];
+            //
+            //     // Instantiate the controller and call the method.
+            //     $controllerInstance = new $controller();
+            //     $controllerInstance->$controllerMethod();
+            //
+            //     return;
+            // }
         }
 
         ErrorController::notFound();
