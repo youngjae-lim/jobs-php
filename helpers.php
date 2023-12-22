@@ -8,7 +8,7 @@
  */
 function basePath($path = '')
 {
-    return __DIR__ . '/' . $path;
+    return __DIR__.'/'.$path;
 }
 
 /**
@@ -83,7 +83,7 @@ function inspectAndDie($var)
  */
 function formatCurrency($number)
 {
-    return '$' . number_format(floatval($number));
+    return '$'.number_format(floatval($number));
 }
 
 /**
@@ -95,4 +95,16 @@ function formatCurrency($number)
 function sanitize($dirty)
 {
     return filter_var(trim($dirty), FILTER_SANITIZE_SPECIAL_CHARS);
+}
+
+/**
+ * Redirect to a given path
+ *
+ * @param  string  $path
+ * @return void
+ */
+function redirect($path)
+{
+    header("Location: /{$path}");
+    exit;
 }

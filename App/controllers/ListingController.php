@@ -54,8 +54,9 @@ class ListingController
         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
 
         // Check if listing exists
-        if (!$listing) {
+        if (! $listing) {
             ErrorController::notFound('Listing not found.');
+
             return;
         }
         $data = [
@@ -79,6 +80,7 @@ class ListingController
             'salary',
             'requirements',
             'benefits',
+            'tags',
             'company',
             'address',
             'city',
@@ -98,6 +100,7 @@ class ListingController
         $requiredFields = [
             'title',
             'description',
+            'salary',
             'email',
             'city',
             'state',
@@ -106,25 +109,43 @@ class ListingController
         $errors = [];
 
         foreach ($requiredFields as $field) {
-            if (empty($newListingData[$field]) || !Validation::string($newListingData[$field])) {
-                $errors[$field] = ucfirst($field) . ' is required.';
+            if (empty($newListingData[$field]) || ! Validation::string($newListingData[$field])) {
+                $errors[$field] = ucfirst($field).' is required.';
             }
         }
 
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $data = [
                 'errors' => $errors,
                 'listing' => $newListingData,
             ];
             loadView('listings/create', $data);
+
             return;
         } else {
-            $success = true;
+            $fields = [];
+            $values = [];
 
-            $data = [
-                'success' => $success,
-            ];
-            loadView('listings/create', $data);
+            foreach ($newListingData as $key => $value) {
+                // Convert empty strings to null
+                if (empty($value)) {
+                    $newListingData[$key] = null;
+                }
+
+                // Extract keys and values for query
+                $fields[] = $key;
+                $values[] = ':'.$key;
+            }
+
+            // Convert arrays to comma separated strings
+            $fields = implode(', ', $fields);
+            $values = implode(', ', $values);
+
+            $query = "INSERT INTO listings ($fields) VALUES ($values)";
+
+            $this->db->query($query, $newListingData);
+
+            redirect('listings');
         }
     }
 }
