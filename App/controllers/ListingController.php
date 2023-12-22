@@ -62,4 +62,38 @@ class ListingController
         ];
         loadView('listings/show', $data);
     }
+
+    /**
+     * Store a new listing.
+     *
+     * @return void
+     */
+    public function store()
+    {
+        // inspect($_POST);
+
+        $allowedFields = [
+            'title',
+            'description',
+            'salary',
+            'requirements',
+            'benefits',
+            'company',
+            'address',
+            'city',
+            'state',
+            'phone',
+            'email',
+        ];
+
+        $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
+
+        // NOTE: Hardcode user_id for now
+        $newListingData['user_id'] = 1;
+
+        // Sanitize data
+        $newListingData = array_map('sanitize', $newListingData);
+
+        inspect($newListingData);
+    }
 }
