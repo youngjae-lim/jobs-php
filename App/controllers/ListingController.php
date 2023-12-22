@@ -175,4 +175,21 @@ class ListingController
         // Redirect to listings page
         redirect('listings');
     }
+
+    public function edit($params)
+    {
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        // Check if listing exists
+        if (! $listing) {
+            ErrorController::notFound('Listing not found.');
+
+            return;
+        }
+        $data = [
+            'listing' => $listing,
+        ];
+
+        loadView('listings/edit', $data);
+    }
 }
