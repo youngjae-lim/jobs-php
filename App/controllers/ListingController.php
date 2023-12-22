@@ -149,6 +149,11 @@ class ListingController
         }
     }
 
+    /**
+     * Delete a listing.
+     *
+     * @return void
+     */
     public function destroy($params)
     {
         // Find a listing by id
