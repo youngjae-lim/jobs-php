@@ -148,4 +148,23 @@ class ListingController
             redirect('listings');
         }
     }
+
+    public function destroy($params)
+    {
+        // Find a listing by id
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        // If listing doesn't exist, show 404 page
+        if (! $listing) {
+            ErrorController::notFound('Listing not found.');
+
+            return;
+        }
+
+        // Delete listing
+        $this->db->query('DELETE FROM listings WHERE id = :id', $params)->fetch();
+
+        // Redirect to listings page
+        redirect('listings');
+    }
 }
