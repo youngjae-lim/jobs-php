@@ -176,6 +176,11 @@ class ListingController
         redirect('listings');
     }
 
+    /**
+     * Edit a listing.
+     *
+     * @return void
+     */
     public function edit($params)
     {
         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
@@ -191,5 +196,98 @@ class ListingController
         ];
 
         loadView('listings/edit', $data);
+    }
+
+    public function update($params)
+    {
+        $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
+
+        // Check if listing exists
+        if (! $listing) {
+            ErrorController::notFound('Listing not found.');
+
+            return;
+        }
+
+        $allowedFields = [
+            'title',
+            'description',
+            'salary',
+            'requirements',
+            'benefits',
+            'tags',
+            'company',
+            'address',
+            'city',
+            'state',
+            'phone',
+            'email',
+        ];
+
+        $updateListingData = array_intersect_key($_POST, array_flip($allowedFields));
+
+        // Sanitize data
+        $updateListingData = array_map('sanitize', $updateListingData);
+
+        $requiredFields = [
+            'title',
+            'description',
+            'salary',
+            'email',
+            'city',
+            'state',
+        ];
+
+        $errors = [];
+
+        foreach ($requiredFields as $field) {
+            if (empty($updateListingData[$field]) || ! Validation::string($updateListingData[$field])) {
+                $errors[$field] = ucfirst($field).' is required.';
+            }
+        }
+
+        if (! empty($errors)) {
+            $updateListingData['id'] = $listing->id;
+
+            // Change $updateLisingData from associative array to object
+            // so we can access it in the view using $listing->field
+            $updateListingData = (object) $updateListingData;
+
+            $data = [
+                'errors' => $errors,
+                'listing' => $updateListingData,
+            ];
+            loadView('listings/edit', $data);
+
+            return;
+        } else {
+            foreach ($updateListingData as $key => $value) {
+                // Convert empty strings to null
+                if (empty($value)) {
+                    $updateListingData[$key] = null;
+                }
+            }
+
+            $updateFields = [];
+
+            foreach (array_keys($updateListingData) as $key) {
+                $updateFields[] = $key.' = :'.$key;
+            }
+
+            $updateFields = implode(', ', $updateFields);
+
+            // Add id to updateListingData
+            $updateListingData['id'] = $listing->id;
+
+            // inspectAndDie($updateFields);
+
+            $updateQuery = "UPDATE listings SET $updateFields WHERE id = :id";
+
+            $this->db->query($updateQuery, $updateListingData);
+
+            $_SESSION['success_message'] = 'Listing updated successfully.';
+
+            redirect('listings/'.$listing->id);
+        }
     }
 }
