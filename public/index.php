@@ -13,7 +13,7 @@ $router = new Router();
 // Get routes
 $routes = require basePath('routes.php');
 
-// Get current URI and HTTP method
+// Get current URI
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Route the request

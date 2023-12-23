@@ -47,6 +47,7 @@ class ListingController
     /**
      * Show the listing page.
      *
+     * @param  array  $params The route parameters (id)
      * @return void
      */
     public function show($params)
@@ -72,8 +73,6 @@ class ListingController
      */
     public function store()
     {
-        // inspect($_POST);
-
         $allowedFields = [
             'title',
             'description',
@@ -152,6 +151,7 @@ class ListingController
     /**
      * Delete a listing.
      *
+     * @param  array  $params The route parameters (id)
      * @return void
      */
     public function destroy($params)
@@ -179,6 +179,7 @@ class ListingController
     /**
      * Edit a listing.
      *
+     * @param  array  $params The route parameters (id)
      * @return void
      */
     public function edit($params)
@@ -198,6 +199,12 @@ class ListingController
         loadView('listings/edit', $data);
     }
 
+    /**
+     * Update a listing.
+     *
+     * @param  array  $params The route parameters (id)
+     * @return void
+     */
     public function update($params)
     {
         $listing = $this->db->query('SELECT * FROM listings WHERE id = :id', $params)->fetch();
@@ -247,7 +254,7 @@ class ListingController
         }
 
         if (! empty($errors)) {
-            $updateListingData['id'] = $listing->id;
+            $updateListingData['id'] = $params['id'];
 
             // Change $updateLisingData from associative array to object
             // so we can access it in the view using $listing->field
@@ -277,9 +284,7 @@ class ListingController
             $updateFields = implode(', ', $updateFields);
 
             // Add id to updateListingData
-            $updateListingData['id'] = $listing->id;
-
-            // inspectAndDie($updateFields);
+            $updateListingData['id'] = $params['id'];
 
             $updateQuery = "UPDATE listings SET $updateFields WHERE id = :id";
 
