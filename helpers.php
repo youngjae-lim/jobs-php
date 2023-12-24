@@ -109,6 +109,6 @@ function sanitize($dirty)
  */
 function redirect($path)
 {
-    header("Location: /{$path}");
+    header("Location: {$path}");
     exit;
 }

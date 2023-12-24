@@ -68,6 +68,7 @@ class UserController
             $errors['password_confirmation'] = 'Passwords do not match.';
         }
 
+        // If validation fails, show errors
         if (! empty($errors)) {
             $data = [
                 'errors' => $errors,
@@ -82,5 +83,39 @@ class UserController
 
             return;
         }
+
+        $params = [
+            'email' => $email,
+        ];
+
+        $user = $this->db->query('SELECT * FROM users WHERE email = :email', $params)->fetch();
+
+        if ($user) {
+            $errors['email'] = 'Email address already in use.';
+            $data = [
+                'errors' => $errors,
+                'user' => [
+                    'name' => $name,
+                    'email' => $email,
+                    'city' => $city,
+                    'state' => $state,
+                ],
+            ];
+            loadView('users/create', $data);
+
+            return;
+        }
+
+        $params = [
+            'name' => $name,
+            'email' => $email,
+            'city' => $city,
+            'state' => $state,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
+        ];
+
+        $this->db->query('INSERT INTO users (name, email, city, state, password) VALUES (:name, :email, :city, :state, :password)', $params);
+
+        redirect('/');
     }
 }

@@ -113,6 +113,11 @@ class ListingController
             }
         }
 
+        // Check if email is valid
+        if (! Validation::email($newListingData['email']) && empty($errors['email'])) {
+            $errors['email'] = 'Please enter a valid email address.';
+        }
+
         if (! empty($errors)) {
             $data = [
                 'errors' => $errors,
@@ -121,31 +126,31 @@ class ListingController
             loadView('listings/create', $data);
 
             return;
-        } else {
-            $fields = [];
-            $values = [];
+        }
 
-            foreach ($newListingData as $key => $value) {
-                // Convert empty strings to null
-                if (empty($value)) {
-                    $newListingData[$key] = null;
-                }
+        $fields = [];
+        $values = [];
 
-                // Extract keys and values for query
-                $fields[] = $key;
-                $values[] = ':'.$key;
+        foreach ($newListingData as $key => $value) {
+            // Convert empty strings to null
+            if (empty($value)) {
+                $newListingData[$key] = null;
             }
 
-            // Convert arrays to comma separated strings
-            $fields = implode(', ', $fields);
-            $values = implode(', ', $values);
-
-            $query = "INSERT INTO listings ($fields) VALUES ($values)";
-
-            $this->db->query($query, $newListingData);
-
-            redirect('listings');
+            // Extract keys and values for query
+            $fields[] = $key;
+            $values[] = ':'.$key;
         }
+
+        // Convert arrays to comma separated strings
+        $fields = implode(', ', $fields);
+        $values = implode(', ', $values);
+
+        $query = "INSERT INTO listings ($fields) VALUES ($values)";
+
+        $this->db->query($query, $newListingData);
+
+        redirect('listings');
     }
 
     /**

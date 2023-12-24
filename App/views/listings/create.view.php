@@ -48,7 +48,7 @@
                 <input type="text" name="phone" value="<?= $listing['phone'] ?? '' ?>" placeholder="Phone" class="w-full px-4 py-2 border rounded focus:outline-none" />
             </div>
             <div class="mb-4">
-                <input type="email" name="email" value="<?= $listing['email'] ?? '' ?>" placeholder="Email Address For Applications" class="w-full px-4 py-2 border rounded focus:outline-none" />
+                <input type="text" name="email" value="<?= $listing['email'] ?? '' ?>" placeholder="Email Address For Applications" class="w-full px-4 py-2 border rounded focus:outline-none" />
             </div>
             <button class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 my-3 rounded focus:outline-none">
                 Save
