@@ -131,4 +131,20 @@ class UserController
 
         redirect('/');
     }
+
+    /**
+     * Logout a user.
+     *
+     * @return void
+     */
+    public function logout()
+    {
+        Session::clearAll();
+
+        // Unset session cookie
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain']);
+
+        redirect('/');
+    }
 }
