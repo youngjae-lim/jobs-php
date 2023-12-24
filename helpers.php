@@ -22,10 +22,10 @@ function loadView($name, $data = [])
 {
     $viewPath = basePath("App/views/{$name}.view.php");
 
-    // Extract data from array so we can use it as variables in the view
-    extract($data);
-
     if (file_exists($viewPath)) {
+        // Extract data from array so we can use it as variables in the view
+        extract($data);
+
         require $viewPath;
     } else {
         echo "View {$name} not found.";
@@ -36,13 +36,17 @@ function loadView($name, $data = [])
  * Load a partial
  *
  * @param  string  $name
+ * @param  array  $data
  * @return void
  */
-function loadPartial($name)
+function loadPartial($name, $data = [])
 {
     $partialPath = basePath("App/views/partials/{$name}.php");
 
     if (file_exists($partialPath)) {
+        // Extract data from array so we can use it as variables in the view
+        extract($data);
+
         require $partialPath;
     } else {
         echo "Partial {$name} not found.";

@@ -10,13 +10,7 @@
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
                 Job Info
             </h2>
-            <?php if (isset($errors) && count($errors) > 0) { ?>
-                <?php foreach ($errors as $error) { ?>
-                    <div class="message bg-red-100 p-3 my-3 text-red-700"><?php echo $error; ?></div>
-                <?php } ?>
-            <?php } elseif (isset($success) && $success === true) { ?>
-                <div class="message bg-green-100 p-3 my-3 text-green-700">Job listing created successfully!</div>
-            <?php } ?>
+            <?= loadPartial('errors', ['errors' => $errors ?? []]); ?>
             <div class="mb-4">
                 <input type="text" name="title" value="<?= $listing['title'] ?? '' ?>" placeholder="Job Title" class="w-full px-4 py-2 border rounded focus:outline-none" />
             </div>
