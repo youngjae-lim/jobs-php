@@ -73,4 +73,41 @@ class Session
         session_unset();
         session_destroy();
     }
+
+    /**
+     * Set a flash message.
+     *
+     * @param  string  $key
+     * @param  string  $message
+     * @return void
+     */
+    public static function setFlashMessage($key, $message)
+    {
+        static::set('flash_'.$key, $message);
+    }
+
+    /**
+     * Get a flash message.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    public static function getFlashMessage($key)
+    {
+        $message = static::get('flash_'.$key) ?? null;
+        static::clear('flash_'.$key);
+
+        return $message;
+    }
+
+    /**
+     * Check if a flash message exists.
+     *
+     * @param  string  $key
+     * @return bool
+     */
+    public static function hasFlashMessage($key)
+    {
+        return static::has('flash_'.$key);
+    }
 }
