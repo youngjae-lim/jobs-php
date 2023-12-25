@@ -2,6 +2,12 @@
 <?php loadPartial('navbar'); ?>
 <?php loadPartial('top-banner'); ?>
 
+<?php
+
+use Framework\Authorization;
+
+?>
+
 <section class="container mx-auto p-4 mt-4">
     <?php loadPartial('message'); ?>
     <div class="rounded-lg shadow-md bg-white p-3">
@@ -10,6 +16,7 @@
                 <i class="fa fa-arrow-alt-circle-left"></i>
                 Back To Listings
             </a>
+            <?php if (Authorization::isOwner($listing->user_id)) { ?>
             <div class="flex space-x-4 ml-4">
                 <a href="/listings/edit/<?= $listing->id ?>" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Edit</a>
                 <!-- Delete Form -->
@@ -19,6 +26,7 @@
                 </form>
                 <!-- End Delete Form -->
             </div>
+            <?php } ?>
         </div>
         <div class="p-4">
             <h2 class="text-xl font-semibold"><?= $listing->title ?></h2>
