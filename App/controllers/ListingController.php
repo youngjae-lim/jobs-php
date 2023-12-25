@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use Framework\Authorization;
 use Framework\Database;
+use Framework\Session;
 use Framework\Validation;
 
 class ListingController
@@ -27,7 +29,7 @@ class ListingController
      */
     public function index()
     {
-        $listings = $this->db->query('SELECT * FROM listings')->fetchAll();
+        $listings = $this->db->query('SELECT * FROM listings ORDER BY created_at DESC')->fetchAll();
         $data = [
             'listings' => $listings,
         ];
@@ -90,8 +92,7 @@ class ListingController
 
         $newListingData = array_intersect_key($_POST, array_flip($allowedFields));
 
-        // NOTE: Hardcode user_id for now
-        $newListingData['user_id'] = 1;
+        $newListingData['user_id'] = Session::get('user')['id'];
 
         // Sanitize data
         $newListingData = array_map('sanitize', $newListingData);
@@ -150,7 +151,7 @@ class ListingController
 
         $this->db->query($query, $newListingData);
 
-        redirect('listings');
+        redirect('/listings');
     }
 
     /**
@@ -171,6 +172,14 @@ class ListingController
             return;
         }
 
+        // Check if user is authorized to delete listing
+        // If not, show 403 page
+        if (! Authorization::isOwner($listing->user_id)) {
+            $_SESSION['error_message'] = 'You are not authorized to delete this listing.';
+
+            return redirect('/listings/'.$listing->id);
+        }
+
         // Delete listing
         $this->db->query('DELETE FROM listings WHERE id = :id', $params)->fetch();
 
@@ -178,7 +187,7 @@ class ListingController
         $_SESSION['success_message'] = 'Listing deleted successfully.';
 
         // Redirect to listings page
-        redirect('listings');
+        redirect('/listings');
     }
 
     /**
@@ -297,7 +306,7 @@ class ListingController
 
             $_SESSION['success_message'] = 'Listing updated successfully.';
 
-            redirect('listings/'.$listing->id);
+            redirect('/listings/'.$listing->id);
         }
     }
 }
